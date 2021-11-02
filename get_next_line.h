@@ -6,7 +6,7 @@
 /*   By: mjoosten <mjoosten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 14:50:38 by mjoosten          #+#    #+#             */
-/*   Updated: 2021/11/01 15:14:12 by mjoosten         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:47:15 by mjoosten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 # include <stddef.h>
 # include <stdlib.h>
 
+typedef struct s_list
+{
+	char			*content;
+	struct s_list	*next;
+}				t_list;
+
 char	*get_next_line(int fd);
 
+t_list	*ft_lstnew(void *content);
+void	ft_lstadd_back(t_list **lst, t_list *new);
+void	ft_lstclear(t_list **lst);
 char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
 
 #endif
