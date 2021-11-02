@@ -6,7 +6,7 @@
 /*   By: mjoosten <mjoosten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 14:50:38 by mjoosten          #+#    #+#             */
-/*   Updated: 2021/11/02 16:47:15 by mjoosten         ###   ########.fr       */
+/*   Updated: 2021/11/02 19:04:17 by mjoosten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct s_list
 {
 	char			*content;
 	struct s_list	*next;
-}				t_list;
+}					t_list;
 
 char	*get_next_line(int fd);
 

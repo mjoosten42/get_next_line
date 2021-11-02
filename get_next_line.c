@@ -6,7 +6,7 @@
 /*   By: mjoosten <mjoosten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 14:53:38 by mjoosten          #+#    #+#             */
-/*   Updated: 2021/11/02 17:42:04 by mjoosten         ###   ########.fr       */
+/*   Updated: 2021/11/02 19:25:56 by mjoosten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,6 @@ static void	ft_rmline(char *buf);
 static char	*ft_strsjoin(t_list **lst);
 static int	ft_strslen(t_list **lst);
 
-void	printlist(t_list **lst)
-{
-	t_list	*ptr;
-	int		i;
-
-	i = 0;
-	ptr = *lst;
-	while (ptr)
-	{
-		printf("LST[%d]: %s\n", i, ptr->content);
-		i++;
-		ptr = ptr->next;
-	}
-}
-
 char	*get_next_line(int fd)
 {
 	static char	buf[BUFFER_SIZE + 1];
@@ -49,18 +34,17 @@ char	*get_next_line(int fd)
 		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf)));
 	while (ft_linelen(buf) == -1)
 	{
-		bytes_read = read(fd, buf, BUFFER_SIZE);
+		bytes_read = read(fd, buf, BUFFER_SIZE);		// Initializes lst???
 		if (bytes_read < 0)
 			return (0);
 		if (bytes_read < BUFFER_SIZE)
 			buf[bytes_read] = 127;
 		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf)));
-		//printlist(&lst);
 	}
 	ft_rmline(buf);
 	str = ft_strsjoin(&lst);
 	ft_lstclear(&lst);
-	if (!str || !*str)
+	if (!(str && *str))
 	{
 		free(str);
 		return (0);
