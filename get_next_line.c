@@ -6,13 +6,11 @@
 /*   By: mjoosten <mjoosten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 14:53:38 by mjoosten          #+#    #+#             */
-/*   Updated: 2021/11/04 13:08:23 by mjoosten         ###   ########.fr       */
+/*   Updated: 2021/11/05 12:08:18 by mjoosten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <limits.h>
-#include <unistd.h>
 
 static int	ft_linelen(char *buf);
 static void	ft_rmline(char *buf);
@@ -26,11 +24,11 @@ char	*get_next_line(int fd)
 	int			bytes_read;
 	t_list		*lst;
 
-	if (fd < 0 || fd > OPEN_MAX || *buf == 127)
+	if (read(fd, buf, 0) < 0 || *buf == 127)
 		return (0);
 	lst = 0;
-	if (*buf)
-		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf)));
+	if (!ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf))))
+		return (ft_lstclear(&lst));
 	while (ft_linelen(buf) == -1)
 	{
 		bytes_read = read(fd, buf, BUFFER_SIZE);
@@ -38,27 +36,13 @@ char	*get_next_line(int fd)
 			return (0);
 		if (bytes_read < BUFFER_SIZE)
 			buf[bytes_read] = 127;
-		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf)));
+		if (!ft_lstadd_back(&lst, ft_lstnew(ft_strdup(buf))))
+			return (ft_lstclear(&lst));
 	}
 	ft_rmline(buf);
 	str = ft_strsjoin(&lst);
 	ft_lstclear(&lst);
 	return (str);
-}
-
-static void	ft_rmline(char *buf)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = ft_linelen(buf);
-	while (len + i < BUFFER_SIZE)
-	{
-		buf[i] = buf[len + i];
-		i++;
-	}
-	buf[i] = 0;
 }
 
 static int	ft_linelen(char *buf)
@@ -77,18 +61,32 @@ static int	ft_linelen(char *buf)
 	return (-1);
 }
 
+static void	ft_rmline(char *buf)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_linelen(buf);
+	while (len + i < BUFFER_SIZE)
+	{
+		buf[i] = buf[len + i];
+		i++;
+	}
+	buf[i] = 0;
+}
+
 static char	*ft_strsjoin(t_list **lst)
 {
 	char	*str;
 	t_list	*ptr;
 	int		i;
 
-	str = malloc(ft_strslen(lst) + 1);
-	if (!str || ft_strslen(lst) == 0)
-	{
-		free(str);
+	if (!ft_strslen(lst))
 		return (0);
-	}
+	str = malloc(ft_strslen(lst) + 1);
+	if (!str)
+		return (0);
 	ptr = *lst;
 	while (ptr)
 	{

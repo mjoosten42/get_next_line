@@ -6,28 +6,35 @@
 /*   By: mjoosten <mjoosten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 14:49:37 by mjoosten          #+#    #+#             */
-/*   Updated: 2021/11/04 13:07:03 by mjoosten         ###   ########.fr       */
+/*   Updated: 2021/11/05 12:08:48 by mjoosten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(char *content)
 {
 	t_list	*new;
 
+	if (!content)
+		return (0);
 	new = (t_list *)malloc(sizeof(t_list));
 	if (!new)
+	{
+		free(content);
 		return (0);
+	}
 	new->content = content;
 	new->next = 0;
 	return (new);
 }
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+t_list	*ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*ptr;
 
+	if (!new)
+		return (0);
 	ptr = *lst;
 	if (ptr)
 	{
@@ -37,9 +44,10 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	}
 	else
 		*lst = new;
+	return (new);
 }
 
-void	ft_lstclear(t_list **lst)
+char	*ft_lstclear(t_list **lst)
 {
 	t_list	*next;
 
@@ -51,6 +59,7 @@ void	ft_lstclear(t_list **lst)
 		*lst = next;
 	}
 	*lst = 0;
+	return (0);
 }
 
 char	*ft_strdup(const char *s1)
